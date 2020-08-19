@@ -6,7 +6,7 @@
 
 ## 部署 HoshinoBot
 
-编写中……
+请参考[HoshinoBot 部署方法（社区版）](https://github.com/pcrbot/HoshinoBot-gacha/blob/master/README.md)
 
 ## 快速上手
 
@@ -50,20 +50,36 @@ MODULES_ON = {
 
 ## 插件结构介绍
 
-编写中……
+HoshinoBot 内文件分布如下：
+
+`/hoshino/modules` 模块目录，每个文件夹是一组插件构成的模块  
+`/hoshino/config` 配置目录，每个`.py`文件是同名模块的配置项  
+`/hoshino/modules/<my_module>` 模块内容，每个文件或目录是一个 python 模块，`*.py`文件和目录下的`__init__.py`文件会被加载为模块插件
 
 ## 高级功能
 
 HoshinoBot 封装了很多高级用法，使得编写插件非常简单
 
-触发器：多种消息触发方式
+[触发器](./trigger.md)：多种消息触发方式
 
-服务层：分群、分权限的管理插件
+[服务层](./service.md)：分群、分权限的管理插件
 
-资源管理：轻松管理图片、语言资源，简单地合成图片并发送
+[资源管理](./resource.md)：轻松管理图片、语言资源，简单地合成图片并发送
 
-编写中……
+[计划任务](./scheduler.md)：轻松管理图片、语言资源，简单地合成图片并发送
 
 ## 学习资料
 
-编写中……
+### Python
+
+为了编写 Hoshino 插件，请学习 python 至**协程**部分
+
+- [Python 官方教程](https://docs.python.org/zh-cn/3/tutorial/index.html)
+- [廖雪峰的 Python 教程](https://www.liaoxuefeng.com/wiki/1016959663602400)
+
+### Git
+
+为了向 [HoshinoBot 项目](https://github.com/Ice-Cirno/HoshinoBot)提交代码，请学习使用 Git 管理项目源码
+
+- [Git 互动教程](https://oschina.gitee.io/learn-git-branching/)
+- [廖雪峰的 Git 教程](https://www.liaoxuefeng.com/wiki/896043488029600)

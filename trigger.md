@@ -4,7 +4,7 @@
 
 ## 触发流程
 
-HoshinoBot对消息的触发方法在文件`msghandler.py`中使用nonebot自带的装饰器`@message_preprocessor`来实现，当接受到消息后，会按照顺序进行如下的检查：
+HoshinoBot对消息的触发方法在文件`msghandler.py`中使用nonebot自带的装饰器`@message_preprocessor`来实现，当接收到消息后，会按照顺序进行如下的步骤：
 
 1. 检查是否是群聊消息，如果否则过滤
 2. 检查是否是指令，如果否则过滤，如果是则输出日志显示指令已被触发
@@ -12,7 +12,7 @@ HoshinoBot对消息的触发方法在文件`msghandler.py`中使用nonebot自带
 4. 检查权限是否允许
 5. 调用对应方法
 
-综上所述，当您在控制台看到日志显示指令被触发时而出现异常时，应当依照此顺序检查错误的环节。
+因此，当您在控制台看到日志显示指令被触发，而实际并未响应时，应当依照此顺序检查错误的环节。
 
 ## 优先级
 
@@ -20,7 +20,7 @@ HoshinoBot对消息的触发方法在文件`msghandler.py`中使用nonebot自带
 
 **本条目仅用来排查错误，请勿利用本条目特性来开发**。
 
-使用已`on_*`开头的装饰器来添加命令，如果有一条消息有多个匹配指令，会按照优先级来触发。如果有同一优先级，则会先按照命令匹配程度来触发，如果命令一致，则按照命令注册的先后顺序（即在代码中的先后顺序）触发。
+使用已`on_*`开头的装饰器来添加命令，如果有一条消息有多个匹配指令，会按照优先级来触发。同一优先级会先按照命令匹配程度来触发，如果命令匹配程度一致，则按照命令注册的先后顺序（即在代码中的先后顺序）触发。
 
 相同优先级的示例代码：
 
@@ -69,7 +69,9 @@ async def demo_fullmatch(bot, ev):
 
 ## 触发器与函数方法
 
-*消息触发器*封装于[服务层](./service.md)中，使用服务提供的`on_*`装饰器作为入口，后跟方法，一个触发器只能对应一个函数方法，但是一个函数方法可以由多个触发器触发，例如：
+*消息触发器*封装于[服务层](./service.md)中，使用服务提供的`on_*`装饰器作为入口，后跟方法，一个触发器只能对应一个函数方法，但是一个函数方法可以有多个触发器作为入口。
+
+示例代码：
 
 ```python
 import Service
@@ -87,7 +89,7 @@ async def whois(bot, ev):
 
 ## HoshinoBot触发器种类
 
-由于原生HoshinoBot 过滤了所有群消息，因此本页所实触发器均为群聊消息有效，如果需私聊指令，可以考虑：
+由于原生HoshinoBot 过滤了群聊以外的消息，因此本页所示触发器均为群聊消息有效，如果需私聊指令，可以考虑：
 
 1. 使用nonebot原生触发器`on_command`
 2. 修改`msghandler.py`，使得其不过滤非群聊消息
@@ -100,7 +102,7 @@ async def whois(bot, ev):
 
 触发条件：当接收到的消息与触发词完全相同时触发。
 
-原型：封装于服务层中，
+原型：
 
 ```python
 def on_fullmatch(self, word, only_to_me=False) -> Callable:
@@ -119,7 +121,7 @@ from hoshino import Service
 
 sv = Service('demo-service')
 
-sv.on_fullmatch('你好')
+@sv.on_fullmatch('你好')
 async def demo_fun(bot, ev):
     await bot.send(ev, '你好！')
     
@@ -132,7 +134,7 @@ from hoshino import Service
 
 sv = Service('demo-service')
 
-sv.on_fullmatch(('你好','你坏'),only_to_me=True)
+@sv.on_fullmatch(('你好','你坏'),only_to_me=True)
 async def demo_fun(bot, ev):
     await bot.send(ev, '???')
 

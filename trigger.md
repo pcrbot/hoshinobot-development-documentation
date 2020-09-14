@@ -16,46 +16,48 @@ HoshinoBot对消息的触发方法在文件`msghandler.py`中使用nonebot自带
 
 ## 优先级
 
-**注意本条目内容由测试而来，优先级数值只用于相互对比（越大优先级越高），并无可量化的含义。**
+**注意本条目内容由测试而来，优先级排序实际上只是优先级数值只用于相互对比（越大优先级越高），并无可量化的含义。**
 
-**推荐您仅使用本条目来排查错误，而非利用本条目特性来开发**。
+**本条目仅用来排查错误，请勿利用本条目特性来开发**。
 
-使用已`on_*`开头的装饰器来添加命令，如果有一条消息有多个匹配指令，会按照优先级来触发。如果有同一优先级，则会按照命令注册的先后顺序（即在代码中的先后顺序）触发。
+使用已`on_*`开头的装饰器来添加命令，如果有一条消息有多个匹配指令，会按照优先级来触发。如果有同一优先级，则会先按照命令匹配程度来触发，如果命令一致，则按照命令注册的先后顺序（即在代码中的先后顺序）触发。
 
-相同优先级的实例代码：
+相同优先级的示例代码：
 
 ```python
 from hoshino import Service
 
 sv = Service('demo-service')
-
-sv.on_fullmatch('优先级测试')
-async def demo_fullmatch(bot, ev):
-    await bot.send(ev, '触发了on_fullmatch呦~~~')
     
-sv.on_prefix('优先级')
+@sv.on_prefix('优先级')
 async def demo_prefix(bot, ev):
     await bot.send(ev, '触发了on_prefixh呦~~~')
 
+@sv.on_fullmatch('优先级测试')
+async def demo_fullmatch(bot, ev):
+    await bot.send(ev, '触发了on_fullmatch呦~~~')
+
 ```
 
-由于触发器`on_fullmatch`和`on_prefix`优先级相同，因此会优先触发`on_fullmatch`，如果调换两个函数的顺序，则会触发`on_prefix`。当两个冲突指令不在同一个文件时，依然遵循此原则，会按照包导入的顺序来触发。
+当发送指令【优先级测试】时，由于触发器`on_fullmatch`和`on_prefix`优先级相同，但是`on_fullmatch`匹配度更高，因此会优先触发`on_fullmatch`，即便调换两个函数的顺序，也会触发`on_fullmatch`。
+
+如果将全字匹配的条件改为“优先级”三个字，则会按照导入的先后顺序触发。
 
 
 
-不同优先级的实例代码：
+不同优先级的示例代码：
 
 ```python
 from hoshino import Service
 
 sv = Service('demo-service')
 
-sv.on_keyword('优先级')
+@sv.on_keyword('优先级')
 async def demo_keyword(bot, ev):
     await bot.send(ev, '触发了on_keyword呦~~~')
 
 
-sv.on_fullmatch('优先级测试')
+@sv.on_fullmatch('优先级')
 async def demo_fullmatch(bot, ev):
     await bot.send(ev, '触发了on_fullmatch呦~~~')
 
@@ -88,7 +90,7 @@ async def whois(bot, ev):
 由于原生HoshinoBot 过滤了所有群消息，因此本页所实触发器均为群聊消息有效，如果需私聊指令，可以考虑：
 
 1. 使用nonebot原生触发器`on_command`
-2. 修改`msghandler.py`，使得其不过滤私聊消息
+2. 修改`msghandler.py`，使得其不过滤非群聊消息
 
 ### 全字匹配
 
@@ -110,7 +112,7 @@ def on_fullmatch(self, word, only_to_me=False) -> Callable:
 1. `word`，全字匹配的条件，可以使用元组配置多个。
 2. `only_to_me`，指令是否需要@机器人，缺省值为False，即不@也可触发。
 
-用法实例1：
+用法示例1：
 
 ```python
 from hoshino import Service

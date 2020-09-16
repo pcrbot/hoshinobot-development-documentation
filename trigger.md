@@ -34,7 +34,7 @@ sv = Service('priority-demo-0')
     
 @sv.on_prefix('优先级0')
 async def demo_fun_0(bot, ev:CQEvent):
-    await bot.send(ev, '触发了on_prefixh呦~~~')
+    await bot.send(ev, '触发了on_prefix呦~~~')
 
 @sv.on_fullmatch('优先级0测试')
 async def demo_fun_1(bot, ev:CQEvent):
@@ -90,7 +90,7 @@ async def demo_fun_0(bot, ev:CQEvent):
     await bot.send(ev, f'提取到了的文本内容是：\n{msg}')
 
 ```
-在群聊中发送”XXX是谁“或”谁是XXX“，均会触发相关函数。此种情况仍受到优先级约束。
+在群聊中发送”XXX之前“或”之后XXX“，均会触发相关函数。此种情况仍受到优先级约束。
 
 
 ## HoshinoBot触发器种类
@@ -117,7 +117,7 @@ def on_fullmatch(self, word, only_to_me=False) -> Callable:
 
 参数与缺省值：
 
-1. `word`，全字匹配的条件，可以使用元组配置多个。
+1. `word`，全字匹配的条件，可以使用元组或列表配置多个（使用列表时最终也会转换为元组）。
 2. `only_to_me`，指令是否需要@机器人，缺省值为False，即不@也可触发。
 
 用法示例——`fullmatch.py`
@@ -144,6 +144,7 @@ async def demo_fun_1(bot, ev):
 装饰器：`on_prefix`
 
 优先级：999
+
 触发条件：当接收到的消息以触发词开头时触发。当使用`CQEvent.message.extract_plain_text()`提取消息内容时将不会包含前缀关键词。
 
 原型：
@@ -223,6 +224,7 @@ async def demo_fun_1(bot, ev:CQEvent):
 装饰器：`on_keyword`
 
 优先级：21
+
 触发条件：当接受到的消息包含该命令时，即触发。
 
 原型：
@@ -238,9 +240,7 @@ def on_keyword(self, keywords, only_to_me=False, normalize=True) -> Callable:
 
 2. `only_to_me`，指令是否需要@机器人，缺省值为False，即不@也可触发。
 
-3. `normalize`，是否进行归一化处理，缺省值为True。如果处理，则会规范化Unicode字符、字母转换为小写、繁体转换为简体，详细方法可查看`trigger.py`中的`normalize_str()`函数。
-
-   **仅此触发器包含normalize，HoshinoBot于2020年8月10日之后已支持自动[繁简转换](https://github.com/Ice-Cirno/HoshinoBot/commit/d91756408762f971b7f0491ffa06f78b7450cbc4)，其他触发器添加的简体指令可以直接用繁体触发**
+3. `normalize`，是否进行归一化处理，缺省值为True。如果处理，则会规范化Unicode字符、字母转换为小写、繁体转换为简体，详细方法可查看`trigger.py`中的`normalize_str()`函数。**仅此触发器包含normalize，HoshinoBot于2020年8月10日之后已支持自动[繁简转换](https://github.com/Ice-Cirno/HoshinoBot/commit/d91756408762f971b7f0491ffa06f78b7450cbc4)，其他触发器添加的简体指令可以直接用繁体触发**
 
 用法示例——`keyword.py`
 
